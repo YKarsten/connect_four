@@ -30,7 +30,7 @@ class Game
 
   def turn(player)
     cell = turn_input(player)
-    board.update_board(cell - 1, player.color)
+    board.update_board(cell, player.color)
     board.show
   end
 

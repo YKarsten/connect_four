@@ -7,42 +7,42 @@ class Board
 
   # 6 row x 7 column grid
   def initialize
-    @cells = (1..42).to_a
+    @cells = Array.new(6) { Array.new(7) }
   end
 
   # rubocop:disable Metrics/AbcSize
   def show
     puts <<-HEREDOC
 
-       #{cells[0]} | #{cells[1]} | #{cells[2]} | #{cells[3]} | #{cells[4]} | #{cells[5]} | #{cells[6]}
+       #{cells[0][0]} | #{cells[0][1]} | #{cells[0][2]} | #{cells[0][3]} | #{cells[0][4]} | #{cells[0][5]} | #{cells[0][6]}
       ---+---+---+---+---+---+---
-       #{cells[7]} | #{cells[8]} | #{cells[9]} | #{cells[10]} | #{cells[11]} | #{cells[12]} | #{cells[13]}
+       #{cells[1][0]} | #{cells[1][1]} | #{cells[1][2]} | #{cells[1][3]} | #{cells[1][4]} | #{cells[1][5]} | #{cells[1][6]}
       ---+---+---+---+---+---+---
-       #{cells[14]} | #{cells[15]} | #{cells[16]} | #{cells[17]} | #{cells[18]} | #{cells[19]} | #{cells[20]}
+       #{cells[2][0]} | #{cells[2][1]} | #{cells[2][2]} | #{cells[2][3]} | #{cells[2][4]} | #{cells[2][5]} | #{cells[2][6]}
       ---+---+---+---+---+---+---
-       #{cells[21]} | #{cells[22]} | #{cells[23]} | #{cells[24]} | #{cells[25]} | #{cells[26]} | #{cells[27]}
+       #{cells[3][0]} | #{cells[3][1]} | #{cells[3][2]} | #{cells[3][3]} | #{cells[3][4]} | #{cells[3][5]} | #{cells[3][6]}
       ---+---+---+---+---+---+---
-       #{cells[28]} | #{cells[29]} | #{cells[30]} | #{cells[31]} | #{cells[32]} | #{cells[33]} | #{cells[34]}
+       #{cells[4][0]} | #{cells[4][1]} | #{cells[4][2]} | #{cells[4][3]} | #{cells[4][4]} | #{cells[4][5]} | #{cells[4][6]}
       ---+---+---+---+---+---+---
-       #{cells[35]} | #{cells[36]} | #{cells[37]} | #{cells[38]} | #{cells[39]} | #{cells[40]} | #{cells[41]}
+       #{cells[5][0]} | #{cells[5][1]} | #{cells[5][2]} | #{cells[5][3]} | #{cells[5][4]} | #{cells[5][5]} | #{cells[5][6]}
       ---+---+---+---+---+---+---
     HEREDOC
   end
   # rubocop:enable Metrics/AbcSize
 
   def update_board(number, color)
-    @cells[number] = color
+    # put the token in the column's first empty space from the bottom
+    target_row = cells.map.with_index { |row, index| row[number].nil? ? index : nil }.compact.max
+    @cells[target_row][number] = color
   end
 
   def valid_move?(number)
-    # is number within the 6x7 grid?
-    # is the index position filled with a color?
-    cells[number - 1] == number
+    # Does input correspond to a valid column and is this column not full?
+    (0..6).to_a.include?(number) && @cells[0][number] == nil
   end
 
   def full?
-    # all cells no longer numbers?
-    cells.all? { |cell| cell =~ /[^0-42]/ }
+    @cells.flatten.none?(&:nil?)
   end
 
   def game_over?

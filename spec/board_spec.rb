@@ -10,22 +10,24 @@ describe Board do
   describe '#update_board' do
     context 'when board is new' do
       it 'updates cells[index]' do
-        player_input = 0
+        player_input = 1
         player_color = 'T'
         board.update_board(player_input, player_color)
         updated_board = board.cells
-        updated_index_zero = ['T'] + (2..42).to_a
+        updated_index_zero = Array.new(6) { Array.new(7) }
+        updated_index_zero[5][1] = 'T'
         expect(updated_board).to eq(updated_index_zero)
       end
     end
 
     context 'when the board has been used' do
       before do
-        board.instance_variable_set(:@cells, [1, 2, 3, 'T', 'W', 6, 7, 'W', 9, 10,
-                                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                                              21, 'T', 23, 24, 'T', 26, 27, 'T', 29, 30,
-                                              31, 32, 33, 'W', 35, 36, 37, 38, 39, 40,
-                                              41, 42])
+        board.instance_variable_set(:@cells, [[nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil]])
       end
 
       it 'updates cells[index]' do
@@ -34,11 +36,12 @@ describe Board do
         player_color = 'W'
         board.update_board(player_input, player_color)
         updated_board = board.cells
-        updated_index_three = [1, 2, 3, 'T', 'W', 'W', 7, 'W', 9, 10,
-                               11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                               21, 'T', 23, 24, 'T', 26, 27, 'T', 29, 30,
-                               31, 32, 33, 'W', 35, 36, 37, 38, 39, 40,
-                               41, 42]
+        updated_index_three = [[nil, nil, nil, nil, nil, nil, nil],
+                               [nil, nil, nil, nil, nil, nil, nil],
+                               [nil, nil, nil, nil, nil, nil, nil],
+                               [nil, nil, nil, nil, nil, 'W', nil],
+                               [nil, nil, nil, nil, nil, 'red', nil],
+                               [nil, nil, nil, nil, nil, 'red', nil]]
         expect(updated_board).to eq(updated_index_three)
       end
     end
@@ -57,31 +60,33 @@ describe Board do
       end
     end
 
-    context 'when choosing a cell that is open' do
+    context 'when choosing a column that is open' do
       before do
-        board.instance_variable_set(:@cells, [1, 2, 3, 'T', 'W', 'W', 7, 'W', 9, 10,
-                                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                                              21, 'T', 23, 24, 'T', 26, 27, 'T', 29, 30,
-                                              31, 32, 33, 'W', 35, 36, 37, 38, 39, 40,
-                                              41, 42])
+        board.instance_variable_set(:@cells, [[nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, nil, nil],
+                                              [nil, nil, nil, nil, nil, 'W', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil]])
       end
       it 'is a valid move' do
-        open_move = board.valid_move?(9)
+        open_move = board.valid_move?(5)
         expect(open_move).to be true
       end
     end
 
-    context 'when choosing a cell that is occupied' do
+    context 'when choosing a column that is occupied' do
       before do
-        board.instance_variable_set(:@cells, [1, 2, 3, 'T', 'W', 'W', 7, 'W', 9, 10,
-                                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                                              21, 'T', 23, 24, 'T', 26, 27, 'T', 29, 30,
-                                              31, 32, 33, 'W', 35, 36, 37, 38, 39, 40,
-                                              41, 42])
+        board.instance_variable_set(:@cells, [[nil, nil, nil, nil, nil, 'blue', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil],
+                                              [nil, nil, nil, nil, nil, 'blue', nil],
+                                              [nil, nil, nil, nil, nil, 'blue', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil]])
       end
       it 'is an invalid move' do
         invalid_move = board.valid_move?(5)
-        expect(invalid_move).not_to be true
+        expect(invalid_move).to be false
       end
     end
     # describe #method end
@@ -100,11 +105,12 @@ describe Board do
 
     context 'when the board is partially filled' do
       before do
-        board.instance_variable_set(:@cells, [1, 2, 3, 'T', 'W', 'W', 7, 'W', 9, 10,
-                                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                                              21, 'T', 23, 24, 'T', 26, 27, 'T', 29, 30,
-                                              31, 32, 33, 'W', 35, 36, 37, 38, 39, 40,
-                                              41, 42])
+        board.instance_variable_set(:@cells, [[nil, nil, nil, nil, nil, 'blue', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil],
+                                              [nil, nil, nil, nil, nil, 'blue', nil],
+                                              [nil, nil, nil, nil, nil, 'blue', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil]])
       end
       it 'is not full' do
         expect(board).not_to be_full
@@ -113,7 +119,12 @@ describe Board do
 
     context 'when the board is completely full' do
       before do
-        board.instance_variable_set(:@cells, Array.new(5) { 'W' })
+        board.instance_variable_set(:@cells, [['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                                              ['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                                              ['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                                              ['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                                              ['red', 'red', 'red', 'red', 'red', 'red', 'red'],
+                                              ['red', 'red', 'red', 'red', 'red', 'red', 'red']])
       end
       it 'is full' do
         expect(board).to be_full
