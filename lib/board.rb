@@ -8,6 +8,7 @@ class Board
   # 6 row x 7 column grid
   def initialize
     @cells = Array.new(6) { Array.new(7) }
+    @last_move = []
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -34,6 +35,7 @@ class Board
     # put the token in the column's first empty space from the bottom
     target_row = cells.map.with_index { |row, index| row[number].nil? ? index : nil }.compact.max
     @cells[target_row][number] = color
+    @last_move = [target_row, number]
   end
 
   def valid_move?(number)
@@ -46,6 +48,16 @@ class Board
   end
 
   def game_over?
-    # hard coding all winning formations is too much
+    row, column = @last_move
+
+    # horizontal win
+    @cells[row][column] && @cells[row][column + 1] && @cells[row][column + 2] == @cells[row][column + 3] ||
+      @cells[row][column] && @cells[row][column - 1] && @cells[row][column - 2] == @cells[row][column - 3] ||
+
+      # vertical win
+      @cells[row][column] && @cells[row + 1][column] && @cells[row + 2][column] == @cells[row + 3][column] ||
+      # # diagonal win
+      @cells[row][column] && @cells[row + 1][column + 1] && @cells[row + 2][column + 2] == @cells[row + 3][column + 3] ||
+      @cells[row][column] && @cells[row - 1][column - 1] && @cells[row - 2][column - 2] == @cells[row - 2][column - 3]
   end
 end
