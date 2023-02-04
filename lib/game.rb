@@ -39,7 +39,7 @@ class Game
   def game_setup
     puts display_intro
     @first_player = create_player(1)
-    @second_player = create_player(2, first_player.symbol)
+    @second_player = create_player(2, first_player.color)
   end
 
   def symbol_input(duplicate)
@@ -68,7 +68,7 @@ class Game
 
   def turn_input(player)
     puts display_player_turn(player.name, player.color)
-    number = gets.chomp
+    number = gets.chomp.to_i
     return number if board.valid_move?(number)
 
     puts display_input_warning

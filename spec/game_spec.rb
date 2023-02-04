@@ -40,11 +40,11 @@ describe Game do
     it 'updates the board' do
       game.instance_variable_set(:@first_player, instance_double(Player))
       player_color = 'red'
-      player_input = 12
+      player_input = 5
       allow(game.first_player).to receive(:color).and_return(player_color)
       allow(game).to receive(:turn_input).with(game.first_player).and_return(player_input)
       allow(game.board).to receive(:show)
-      expect(game.board).to receive(:update_board).with(player_input - 1, player_color)
+      expect(game.board).to receive(:update_board).with(player_input, player_color)
       game.turn(game.first_player)
     end
   end

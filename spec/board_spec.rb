@@ -209,7 +209,7 @@ describe Board do
 
     context 'When a player has connect four diagonally' do
       before do
-        board.instance_variable_set(:@last_move, [5, 3])
+        board.instance_variable_set(:@last_move, [3, 5])
         board.instance_variable_set(:@cells, [[nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, nil],
                                               [nil, nil, nil, nil, nil, nil, 'red'],

@@ -26,7 +26,7 @@ class Board
        #{cells[4][0]} | #{cells[4][1]} | #{cells[4][2]} | #{cells[4][3]} | #{cells[4][4]} | #{cells[4][5]} | #{cells[4][6]}
       ---+---+---+---+---+---+---
        #{cells[5][0]} | #{cells[5][1]} | #{cells[5][2]} | #{cells[5][3]} | #{cells[5][4]} | #{cells[5][5]} | #{cells[5][6]}
-      ---+---+---+---+---+---+---
+      ----+----+----+----+----+----+----
     HEREDOC
   end
   # rubocop:enable Metrics/AbcSize
@@ -48,16 +48,26 @@ class Board
   end
 
   def game_over?
+    horizontal_win? ||
+      vertical_win?
+  end
+
+  def horizontal_win?
     row, column = @last_move
 
-    # horizontal win
-    @cells[row][column] && @cells[row][column + 1] && @cells[row][column + 2] == @cells[row][column + 3] ||
-      @cells[row][column] && @cells[row][column - 1] && @cells[row][column - 2] == @cells[row][column - 3] ||
+    # to have a horizontal win, the middle column needs to match the players color
+    return false unless @cells[row][column] == @cells[row][3]
 
-      # vertical win
-      @cells[row][column] && @cells[row + 1][column] && @cells[row + 2][column] == @cells[row + 3][column] ||
-      # # diagonal win
-      @cells[row][column] && @cells[row + 1][column + 1] && @cells[row + 2][column + 2] == @cells[row + 3][column + 3] ||
-      @cells[row][column] && @cells[row - 1][column - 1] && @cells[row - 2][column - 2] == @cells[row - 2][column - 3]
+    a = @cells[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
+    return a.first unless a.nil?
+  end
+
+  def vertical_win?
+    # transpose the grid and apply the same algotihm used in horizontal check
+    transposed = @cells.transpose
+    row, _column = @last_move
+
+    a = transposed[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
+    return a.first unless a.nil?
   end
 end
