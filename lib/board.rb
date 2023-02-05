@@ -49,7 +49,9 @@ class Board
 
   def game_over?
     horizontal_win? ||
-      vertical_win?
+      vertical_win? ||
+      diagonal_win? ||
+      antediagonal_win?
   end
 
   def horizontal_win?
@@ -69,5 +71,45 @@ class Board
 
     a = transposed[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
     return a.first unless a.nil?
+  end
+
+  def diagonal_win?
+    row, _column = @last_move
+    diagonal_arr = diagonals
+
+    a = diagonal_arr[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
+    return a.first unless a.nil?
+  end
+
+  def antediagonal_win?
+    row, _column = @last_move
+    ante_diagonal_arr = antediagonals
+
+    a = ante_diagonal_arr[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
+    return a.first unless a.nil?
+  end
+
+  def diagonals
+    # the first part obtains all diagonals with >= 4 entries originating from column 0.
+    (0..@cells.size - 4).map do |i|
+      (0..@cells.size - 1 - i).map { |j| @cells[i + j][j] }
+      # the second part picks up the remaining diagonals originating from row 0.
+    end.concat((1..@cells.first.size - 4).map do |j|
+      (0..@cells.size - j - 1).map { |i| @cells[i][j + i] }
+    end)
+  end
+
+  def antediagonals
+    reverse = []
+    @cells.each do |row|
+      reverse << row.reverse
+    end
+    # the first part obtains all diagonals with >= 4 entries originating from column 0.
+    (0..reverse.size - 4).map do |i|
+      (0..reverse.size - 1 - i).map { |j| reverse[i + j][j] }
+      # the second part picks up the remaining diagonals originating from row 0.
+    end.concat((1..reverse.first.size - 4).map do |j|
+      (0..reverse.size - j - 1).map { |i| reverse[i][j + i] }
+    end)
   end
 end

@@ -199,8 +199,8 @@ describe Board do
                                               [nil, 'red', nil, nil, nil, nil, nil],
                                               [nil, nil, 'red', nil, nil, nil, nil],
                                               [nil, nil, nil, 'red', nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil]])
+                                              [nil, nil, nil, nil, 'red', nil, nil],
+                                              [nil, nil, nil, nil, nil, 'red', nil]])
       end
       it 'is game over' do
         expect(board).to be_game_over
@@ -209,13 +209,13 @@ describe Board do
 
     context 'When a player has connect four diagonally' do
       before do
-        board.instance_variable_set(:@last_move, [3, 5])
-        board.instance_variable_set(:@cells, [[nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, nil],
-                                              [nil, nil, nil, nil, nil, nil, 'red'],
+        board.instance_variable_set(:@last_move, [0, 6])
+        board.instance_variable_set(:@cells, [[nil, nil, nil, nil, nil, nil, 'red'],
                                               [nil, nil, nil, nil, nil, 'red', nil],
-                                              [nil, nil, nil, nil, 'red', nil, nil],
-                                              [nil, nil, nil, 'red', nil, nil, nil]])
+                                              [nil, nil, nil, nil, 'red', nil, 'red'],
+                                              [nil, nil, nil, 'red', nil, 'red', nil],
+                                              [nil, nil, 'red', nil, 'red', nil, nil],
+                                              [nil, 'red', nil, 'red', nil, nil, nil]])
       end
       it 'is game over' do
         expect(board).to be_game_over
