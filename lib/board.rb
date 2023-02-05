@@ -54,39 +54,27 @@ class Board
       antediagonal_win?
   end
 
-  def horizontal_win?
-    row, column = @last_move
+  def horizontal_win?(array = @cells)
+    row, _column = @last_move
 
-    # to have a horizontal win, the middle column needs to match the players color
-    return false unless @cells[row][column] == @cells[row][3]
-
-    a = @cells[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
-    return a.first unless a.nil?
+    short_block = array[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
+    return short_block.first unless short_block.nil?
   end
 
   def vertical_win?
     # transpose the grid and apply the same algotihm used in horizontal check
     transposed = @cells.transpose
-    row, _column = @last_move
-
-    a = transposed[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
-    return a.first unless a.nil?
+    horizontal_win?(transposed)
   end
 
   def diagonal_win?
-    row, _column = @last_move
     diagonal_arr = diagonals
-
-    a = diagonal_arr[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
-    return a.first unless a.nil?
+    horizontal_win?(diagonal_arr)
   end
 
   def antediagonal_win?
-    row, _column = @last_move
     ante_diagonal_arr = antediagonals
-
-    a = ante_diagonal_arr[row].each_cons(4).find { |a| a.uniq.size == 1 && a.first != '.' }
-    return a.first unless a.nil?
+    horizontal_win?(ante_diagonal_arr)
   end
 
   def diagonals
@@ -100,10 +88,12 @@ class Board
   end
 
   def antediagonals
+    # By reversing the nested array I can recycle the diagonal_win? logic
     reverse = []
     @cells.each do |row|
       reverse << row.reverse
     end
+
     # the first part obtains all diagonals with >= 4 entries originating from column 0.
     (0..reverse.size - 4).map do |i|
       (0..reverse.size - 1 - i).map { |j| reverse[i + j][j] }
